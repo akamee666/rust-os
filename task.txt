@@ -1,5 +1,5 @@
 ## To do:
 
-1 [ ] - Compile and run the kernel using qemu. 
-2 [ ] - Create scroll when the screen is filled and support line breaks for kernel. 
-3 [ ] - Translate the C kernel to Rust. 
+1 [x] - Compile and run the kernel using qemu. 
+2 [ ] - Translate the C kernel to Rust. 
+3 [ ] - Create scroll when the screen is filled and support line breaks for kernel. 
