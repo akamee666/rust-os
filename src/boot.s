@@ -1,3 +1,5 @@
+  /* Rust's ASM block does not seem to default to at&t syntax, need to force it */
+  .att_syntax 
   /* Declare constants for the multiboot header.
   If bit 0 in the ‘flags’ word is set, then all boot modules loaded along with the
   operating system must be aligned on page (4KB) boundaries. Some operating systems

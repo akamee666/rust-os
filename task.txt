@@ -1,5 +1,7 @@
 ## To do:
 
 1 [x] - Compile and run the kernel using qemu. 
-2 [ ] - Translate the C kernel to Rust. 
+2 [ ] - Translate the C kernel to Rust.
+    [ ] - Create env to properly build the rust kernel.
+
 3 [ ] - Create scroll when the screen is filled and support line breaks for kernel. 
