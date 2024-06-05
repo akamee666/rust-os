@@ -40,3 +40,23 @@ Until now(finished build the cross compiler!) i did not but follow the tutorial 
 This specification adopts a compromise solution to this problem. Multiboot-compliant OS images always contain a magic Multiboot header (see OS image format), which allows the boot loader to load the image without having to understand numerous a.out variants or other executable formats. This magic header does not need to be at the very beginning of the executable file, so kernel images can still conform to the local a.out format variant in addition to being Multiboot-compliant.
 
 While these additional modules could be embedded in the main OS image along with the kernel itself, and the resulting image be split apart manually by the operating system when it receives control, it is often more flexible, more space-efficient, and more convenient to the operating system and user if the boot loader can load these additional modules independently in the first place.
+
+That will take some time to finish for sure, rust can be tough sometimes. what a unique language, but its fun so 
+
+
+    Packages: A Cargo feature that lets you build, test, and share crates
+    Crates: A tree of modules that produces a library or executable
+    Modules and use: Let you control the organization, scope, and privacy of paths
+    Paths: A way of naming an item, such as a struct, function, or module
+
+crates binary are just programs that can be compiled and run. Each of them need the main.
+crates can be libraries as well 
+crateroot is the source of files like src and is defined in cargo.toml 
+
+
+Declaring modules: In the crate root file, you can declare new modules; say, you declare a “garden” module with mod garden;. The compiler will look for the module’s code in these places:
+
+    Inline, within curly brackets that replace the semicolon following mod garden
+    In the file src/garden.rs
+    In the file src/garden/mod.rs
+

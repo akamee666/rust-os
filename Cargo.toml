@@ -3,6 +3,8 @@ name = "test-os"
 version = "0.1.0"
 edition = "2021"
 
+# This is used to disable unwinding(roughly the stack destroyer :D ) cause 
+# it needs some libraries that our operation system don't have
 [profile.dev]
 panic = "abort"
 
