@@ -60,3 +60,68 @@ Declaring modules: In the crate root file, you can declare new modules; say, you
     In the file src/garden.rs
     In the file src/garden/mod.rs
 
+//Shareable mutable containers exist to permit mutability in a controlled manner, even in the presence of aliasing. Cell<T>, RefCell<T>, and OnceCell<T> allow doing this in a single-threaded way—they do not implement Sync. (If you need to do aliasing and mutation among multiple threads, Mutex<T>, RwLock<T>, OnceLock<T> or atomic types are the correct data structures to do so). https://fongyoong.github.io/easy_rust/Chapter_41.html
+/* 
+
+   You'd use a RefCell for similar reasons to why you'd need a mutex - you need to mutate via a shared reference (i.e. "interior mutability"). So why choose a RefCell?
+
+   it's likely faster (it's just doing simple arithmetic, compared to mutex which usually communicates with the OS)
+
+   it works in #[no_std] environments
+
+   you don't need thread safety
+
+   There are other concurrency primitives you can use. The most obvious one is atomics (e.g. AtomicU64). Like mutex, these are thread safe, and allow mutation via a shared reference. Unlike mutex, however, these are implemented by your CPU, rather than your OS, so typically work in no_std crates (though perhaps there are microcontrollers with no atomics? Not sure). The main downside is you can only use certain types, and it's pretty much just integers and bool (which is kinda already an integer). Custom types aren't supported.
+
+   As for part 4, generally no, a mutex won't panic if another thread has the lock - it will block until the lock is available. However, mutex.lock() returns a result, since the lock can be "poisoned" (if the thread that was holding the lock panicked). This can be safe to ignore (and you can get the mutex guard from the error), but rust has chosen to make you handle it explicitly by default. It's pretty common to see mutex.lock().unwrap() - I wouldn't consider this a code smell
+   */ 
+
+// To provide a global writer that can be used as an interface from other modules without carrying a Writer instance around, we try to create a static WRITER:
+// https://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/book/first-edition/const-and-static.html
+
+
+
+/*n Rust, borrow_mut() is a method associated with the RefCell type. It allows you to obtain a mutable reference to the data stored inside a RefCell. This is useful when you need to modify the data within the RefCell, but Rust's ownership system wouldn't normally allow it.
+
+  Here's a breakdown of the key concepts involved:
+
+  RefCell: RefCell is a wrapper type provided by the std::cell module. It acts like a regular reference cell but with additional features for runtime borrowing checks.
+
+  Borrowing: Rust's ownership system relies on the concept of borrowing. You can borrow data from a variable to access its contents for a limited time. There are two types of borrows:
+  Immutable Borrow (&): This allows you to read the data but not modify it.
+  Mutable Borrow (&mut): This allows you to both read and modify the data.
+
+  Borrow Checker: Rust's borrow checker ensures that only one mutable borrow or multiple immutable borrows exist for a piece of data at any given time. This prevents data races and memory corruption.
+
+  How borrow_mut() Works:
+
+  When you call borrow_mut() on a RefCell, it attempts to acquire a mutable reference to the underlying data.
+  The RefCell performs a runtime check to ensure no other borrows (immutable or mutable) exist for the data.
+  If the check succeeds, borrow_mut() returns a mutable reference (&mut T) to the data inside the RefCell. You can then use this reference to modify the data.
+  If the check fails (because another borrow exists), borrow_mut() typically panics, indicating a potential borrowing violation.
+
+  Why Use borrow_mut()?
+
+  Modifying Data in Immutable Structs: Sometimes, a struct might primarily store immutable data but have a field that needs occasional modification. RefCell allows you to wrap the struct and use borrow_mut() to modify that specific field while maintaining immutability for the rest of the data.
+  Safely Releasing Borrows: Unlike raw pointers, RefCell ensures that borrows are released automatically when they go out of scope. This helps prevent memory leaks.
+
+  Things to Consider with borrow_mut():
+
+  Potential Overhead: Using RefCell introduces some runtime overhead compared to plain references. This might be a concern in performance-critical sections of your code.
+  Manual Borrow Management: While RefCell helps with safety checks, it doesn't eliminate the need for careful borrow management in your code. You still need to ensure that borrows don't conflict with each other and are released promptly.
+
+  In Summary:
+
+  borrow_mut() is a powerful tool for controlled mutability within RefCell. It allows you to modify data in scenarios where Rust's ownership system might otherwise prevent it. However, use it judiciously and be aware of the potential overhead and need for manual borrow management.
+  */
+
+IN    Read from a port
+OUT   Write to a port
+INS/INSB  Input string from port/Input byte string from port 
+INS/INSW  Input string from port/Input word string from port 
+INS/INSD  Input string from port/Input doubleword string from port
+OUTS/OUTSB    Output string to port/Output byte string to port 
+OUTS/OUTSW    Output string to port/Output word string to port 
+OUTS/OUTSD    Output string to port/Output doubleword string to port
+
+ram and io devices are connect in the same address, but i the M/#IO can distinguish between which one im trying to use depending on the instruction that im using

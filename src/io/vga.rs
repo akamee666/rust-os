@@ -8,6 +8,7 @@ impl Write for TerminalWriter {
     }
 }
 
+// Create a new instance of RefCell where the value is an TerminalWriter struct.
 pub static TERMINAL_WRITER: StaticTerminalWriter = StaticTerminalWriter::new();
 
 pub struct StaticTerminalWriter {
@@ -23,6 +24,8 @@ impl StaticTerminalWriter {
 }
 
 // https://timclicks.dev/explaining-rusts-deref-trait/
+// Whenever i use StaticTerminalWriter, deref method will be used to get the inner value(The real
+// struct actually)
 impl core::ops::Deref for StaticTerminalWriter {
     type Target = RefCell<TerminalWriter>;
     fn deref(&self) -> &Self::Target {
@@ -31,24 +34,6 @@ impl core::ops::Deref for StaticTerminalWriter {
 }
 
 unsafe impl Sync for StaticTerminalWriter {}
-
-macro_rules! print {
-    ($($arg:tt)*) => {
-        #[allow(unused_unsafe)]
-        unsafe {
-            use core::fmt::Write as FmtWrite;
-            let mut writer = $crate::vga::TERMINAL_WRITER.borrow_mut();
-            write!(writer, $($arg)*).expect("Failed to print to vga!");
-        }
-    } 
-}
-
-macro_rules! println {
-    ($($arg:tt)*) => {
-        print!($($arg)*);
-        print!("\n");
-    }
-}
 
 #[allow(dead_code)]
 enum VgaColor {
@@ -70,7 +55,7 @@ enum VgaColor {
     White = 15,
 }
 
-const fn vga_entry_color(fg: VgaColor,bg: VgaColor) -> u8 {
+const fn vga_entry_color(fg: VgaColor, bg: VgaColor) -> u8 {
     fg as u8 | (bg as u8) << 4
 }
 
@@ -81,6 +66,7 @@ const fn vga_entry(uc: u8, color: u8) -> u16 {
 const VGA_WIDTH: usize = 80;
 const VGA_HEIGHT: usize = 25;
 
+// Put row and column together may help the redibility for my code.
 pub struct TerminalWriter {
     terminal_row: usize,
     terminal_column: usize,
@@ -94,7 +80,7 @@ impl TerminalWriter {
     const fn new() -> TerminalWriter {
         let terminal_row = 0;
         let terminal_column = 0;
-        let terminal_color = vga_entry_color(VgaColor::LightGrey,VgaColor::Black);
+        let terminal_color = vga_entry_color(VgaColor::LightGrey, VgaColor::Black);
         let terminal_buffer = 0xB8000 as *mut u16;
 
         /* Return the initialized values from the function above*/
@@ -110,17 +96,17 @@ impl TerminalWriter {
         let terminal = TERMINAL_WRITER.borrow_mut();
         for y in 0..VGA_HEIGHT {
             for x in 0..VGA_WIDTH {
+                // multiples the current row by the total number of chars per row
+                // and add the current column after that.
                 let index = y * VGA_WIDTH + x;
                 unsafe {
                     *terminal.terminal_buffer.add(index) = vga_entry(b' ', terminal.terminal_color);
                 }
             }
         }
-
     }
 
-
-#[allow(dead_code)]
+    #[allow(dead_code)]
     fn set_color(&mut self, color: u8) {
         self.terminal_color = color;
     }
@@ -138,7 +124,12 @@ impl TerminalWriter {
             self.terminal_column = 0;
             return;
         }
-        self.put_entry_at(character, self.terminal_color ,self.terminal_column, self.terminal_row,);
+        self.put_entry_at(
+            character,
+            self.terminal_color,
+            self.terminal_column,
+            self.terminal_row,
+        );
         self.terminal_column += 1;
         if self.terminal_column == VGA_WIDTH {
             self.terminal_column = 0;
