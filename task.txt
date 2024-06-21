@@ -1,10 +1,13 @@
 ## To do:
 
-1 [x] - Compile and run the kernel using qemu. 
-2 [x] - Translate the C kernel to Rust.
+[x] - Compile and run the kernel using qemu. 
+
+[x] - Translate the C kernel to Rust.
     [x] - Create env to properly build the rust kernel. -> links to do this in commit log 
-3 [x] - support line breaks for kernel. 
-4 [x] - create println macro using vga.
+
+[x] - support line breaks for kernel. 
+ 
+[x] - create println macro using vga.
     [x] - import core::fmt::Writer.
     [x] - Make TerminalWriter Global, I do not want to stay around carrying instances of TerminalWriter.
     [x] - Use RefCell since i do not have more than one threads running.
@@ -12,21 +15,33 @@
     [x] - implement the println macro! 
     [x]  - documentate it better cause i barelly understand what i did.
 
--------------  diff from last commit 
+[x] - Outputting to a serial port?(uart)
+    [x] - Implement write to both serial port and vga buffer using println.
+    [x] - Check error code, maybe quit qemu from within kernel.
+ 
+[x] - test environment implementation 
 
-5  [x] - Outputting to a serial port?(uart)
-    [ ] - Implement the same global shit in the serial stuff.
-    [ ] - Implement write to both serial port and vga buffer using println.
-    [x] - test implementation
-    [ ] - Check error code, maybe quit qemu from within kernel
-    [ ] - Having a working and reliable interrupt/exception handling system that can dump the contents of the registers (and perhaps the address of the fault) will be very useful.
-      [ ] Interrupt Descriptor Table -> calls interrupt routine/handler.
-      [ ] Handle IQR with I/O Inline Assembly code
-      Make space for the interrupt descriptor table
-      Tell the CPU where that space is (see GDT Tutorial: lidt works the very same way as lgdt)
-      Tell the PIC that you no longer want to use the BIOS defaults (see Programming the PIC chips)
-      Write a couple of ISR handlers (see Interrupt Service Routines) for both IRQs and exceptions
-      Put the addresses of the ISR handlers in the appropriate descriptors (in Interrupt Descriptor Table)
-    Enable all supported interrupts in the IRQ mask (of the PIC) 
-8 [ ] - Plan your memory map (virtual, and physical) : decide where you want the data to be
-9 [ ] - The heap: allocating memory at runtime (malloc and free) is almost impossible to go without. It should be implemented as soon as possible. 
+[x] - Get Multiboot info as argument from boot.s.
+    [x] - understand what that fuck is slice in rust cause i dont get it still https://tbuss.de/posts/2021/6-rust-slice-types  
+
+[ ] Get to Long mode 
+  [ ] Load gdt 
+    [x] understand code from sphaerophophia loading gdt
+    [ ] calculate base address and limit address in rust 
+    [ ] test everything and make sure that its working
+    [ ] create code,data and null segments in gdt?
+    [ ] load it using inline assembly
+    [ ] Reload segments registers
+    http://www.cs.cmu.edu/afs/cs/academic/class/15213-f02/www/R03/section_b/x86notes.pdf
+[ ] Have working tests
+[ ] - Having a working and reliable interrupt/exception handling system that can dump the contents of the registers (and perhaps the address of the fault) will be very useful.
+  [ ] Interrupt Descriptor Table -> calls interrupt routine/handler. 
+  [ ] Handle IQR with I/O Inline Assembly code
+  [ ] Make space for the interrupt descriptor table
+  [ ] Tell the CPU where that space is (see GDT Tutorial: lidt works the very same way as lgdt)
+  [ ] Tell the PIC that you no longer want to use the BIOS defaults (see Programming the PIC chips)
+  [ ] Write a couple of ISR handlers (see Interrupt Service Routines) for both IRQs and exceptions
+  [ ] Put the addresses of the ISR handlers in the appropriate descriptors (in Interrupt Descriptor Table)
+  [ ] Enable all supported interrupts in the IRQ mask (of the PIC)   
+[ ] - Plan your memory map (virtual, and physical) : decide where you want the data to be
+[ ] - The heap: allocating memory at runtime (malloc and free) is almost impossible to go without. It should be implemented as soon as possible. 

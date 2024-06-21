@@ -6,19 +6,24 @@ pub mod vga;
 unsafe fn inb(addr: u16) -> u8 {
     let mut ret: u8;
     asm!(r#"
-        in al, dx 
+        in %dx, %al 
         "#, 
         in("dx") addr,
-        out("al") ret);
+        out("al") ret, options(att_syntax));
     ret
 }
 
 unsafe fn outb(addr: u16, value: u8) {
     asm!(r#"
-        out dx, al 
+        out %al, %dx
         "#, 
         in("dx") addr,
-        in("al") value);
+        in("al") value, options(att_syntax));
+}
+
+pub unsafe fn exit(code: u8) {
+    let isa_debug_exit_port: u16 = 0xf4;
+    outb(isa_debug_exit_port, code);
 }
 
 macro_rules! print {
@@ -36,6 +41,8 @@ macro_rules! println {
     ($($arg:tt)*) => {
         print!($($arg)*);
         print!("\n");
+        print_serial!($($arg)*);
+        print_serial!("\n");
     }
 }
 

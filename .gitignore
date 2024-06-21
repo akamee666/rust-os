@@ -2,7 +2,7 @@
 *.iso
 *.bin
 /isodir
-
+/lab
 
 # Added by cargo
 

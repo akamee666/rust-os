@@ -1,5 +1,3 @@
-  /* Rust's ASM block does not seem to default to at&t syntax, need to force it */
-  .att_syntax 
   /* Declare constants for the multiboot header.
   If bit 0 in the ‘flags’ word is set, then all boot modules loaded along with the
   operating system must be aligned on page (4KB) boundaries. Some operating systems
@@ -68,13 +66,17 @@ _start:
   itself. It has absolute and complete power over the
   machine.
   */
-
+  
+  
   /*
   To set up a stack, we set the esp register to point to the top of the
   stack (as it grows downwards on x86 systems). This is necessarily done
   in assembly as languages such as C cannot function without a stack.
+  Also push a ptr to the first element in Multiboot information according to multiboot1 spec
+  to get this ptr as argument in high level kernel_main 
   */
   mov $stack_top, %esp
+  push %ebx
 
   /*
   This is a good place to initialize crucial processor state before the

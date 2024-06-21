@@ -1,5 +1,5 @@
 [package]
-name = "test-os"
+name = "rust-kernel"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,6 +8,5 @@ edition = "2021"
 # it needs some libraries that our operation system don't have
 [profile.dev]
 
-[profile.release]
 
 [dependencies]

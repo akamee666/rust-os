@@ -125,3 +125,10 @@ OUTS/OUTSW    Output string to port/Output word string to port
 OUTS/OUTSD    Output string to port/Output doubleword string to port
 
 ram and io devices are connect in the same address, but i the M/#IO can distinguish between which one im trying to use depending on the instruction that im using
+
+interrupt descriptor table 
+
+The IDT entries are called gates. It can contain Interrupt Gates, Task Gates and Trap Gates.  
+
+
+
