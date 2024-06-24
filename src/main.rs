@@ -1,10 +1,12 @@
 #![no_std]
 #![no_main]
+#![allow(named_asm_labels)]
 
 #[macro_use]
 mod io;
 mod gdt;
 mod multiboot;
+mod util;
 
 use crate::io::serial::SerialPort;
 use crate::multiboot::MultiBootInfo;
@@ -35,8 +37,11 @@ fn panic(info: &PanicInfo) -> ! {
 pub unsafe extern "C" fn kernel_main(info: *const MultiBootInfo) -> i32 {
     TerminalWriter::init();
     SerialPort::init().expect("Failed to init SerialPort");
-
     gdt::init();
+
+    println!("Calling print_gdt in main");
+    gdt::print_gdt();
+    println!("");
     multiboot::MultiBootInfo::print_memory(&(*info));
     io::exit(0);
     0

@@ -27,11 +27,12 @@
 [ ] Get to Long mode 
   [ ] Load gdt 
     [x] understand code from sphaerophophia loading gdt
-    [ ] calculate base address and limit address in rust 
-    [ ] test everything and make sure that its working
-    [ ] create code,data and null segments in gdt?
-    [ ] load it using inline assembly
-    [ ] Reload segments registers
+    [x] calculate base address and limit address in rust 
+    [later] test everything and make sure that its working
+    [x] create code,data and null segments in gdt?
+    [x] load it using inline assembly
+    [x] Reload segments registers
+    [ ] something isn't working, do i loaded it incorrectly? 
     http://www.cs.cmu.edu/afs/cs/academic/class/15213-f02/www/R03/section_b/x86notes.pdf
 [ ] Have working tests
 [ ] - Having a working and reliable interrupt/exception handling system that can dump the contents of the registers (and perhaps the address of the fault) will be very useful.
